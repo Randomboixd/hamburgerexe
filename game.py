@@ -37,13 +37,12 @@ def tutorialscreen():
     elif StartupFrames < 900:
         a = GFont.render("Don't ask why im here.", False, (255,255,255))
         screen.blit(a, fontcenter)
-    elif StartupFrames < 1500:
+    elif StartupFrames < 1800:
         a = GFont.render("You must consume the hamburgers!", False, (255,255,255))
         screen.blit(a, fontcenter)
-    elif StartupFrames < 2000:
+    elif StartupFrames < 2900:
         a = GFont_smaller.render("Or death will be your only choice! now GO!", False, (255,255,255))
         screen.blit(a, fontcenter)
-    #if StartupFrames => 
 
 runs = True
 while runs:
@@ -93,6 +92,7 @@ while runs:
     PlayerY += MovingConstantY
     PlayerX += MovingConstantX
     
+
     if PlayerY > 600 - 64:
         PlayerY = 600 - 64
     elif PlayerY < 0:
