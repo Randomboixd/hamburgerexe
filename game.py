@@ -114,6 +114,9 @@ ToiletMovingConstantY = 0
 
 GameOver = False # Is game over?
 
+hasbackround = True
+
+
 reaction = GFont_smaller.render("Event: - nothing -", False, (255,255,255))
 
 if os.path.exists("hamburger.records"): # If possible, load the records
@@ -188,7 +191,8 @@ def renderSpikes(): # Get spike locations and then render it
 
 runs = True
 while runs:
-    screen.fill(backroundcolor)
+    if hasbackround == True:
+        screen.fill(backroundcolor)
     for events in pygame.event.get():
 
         if events.type == pygame.QUIT:
@@ -235,6 +239,11 @@ while runs:
                 print("Exiting")
                 break
 
+            if events.key == pygame.K_LALT:
+                print("--- Start Variable Dump ---")
+                print(f"PlayerX/Y: {str((PlayerX, PlayerY))}\nToiletX/Y: {str((ToiletX,ToiletY))}\nGameSaved: {str(Saved)}\nStartupFrames: {str(StartupFrames)}\nSpikes: {str(spikes)}\nGameOver: {str(GameOver)}\ntoilettakechance: {str(toilettakechance)}\nCheseburgerLoc: {str(cheseburgerloc)}\nCheseburgerstouched: {str(cheseburgerstouched)}\nMovingConstantX/Y: {str((MovingConstantX, MovingConstantY))}\nToiletMovingConstantX/Y: {str((ToiletMovingConstantX,ToiletMovingConstantY))}\nMovespeed: {str(moveSpeed)}")
+                print("--- End Variable Dump ---")
+
             if events.key == pygame.K_f:
                 if pygame.display.is_fullscreen() == False:
                     pygame.display.toggle_fullscreen()
@@ -242,6 +251,11 @@ while runs:
                 else:
                     pygame.display.toggle_fullscreen()
                     print("No more fullscreen :(")
+            
+            if events.key == pygame.K_g:
+                hasbackround = True
+
+                    
 
         
 
@@ -345,14 +359,14 @@ while runs:
 
     if random.randint(0, 999) == 69:
 
-        event = random.choice(["spikes", "rnggod", "rnggodfail", "speedup", "speeddown", "invert"])
+        event = random.choice(["spikes", "rnggod", "rnggodfail", "speedup", "speeddown", "invert", "nobackround", "randombackround"])
         if event == "spikes":
             spikes.append((random.randint(0, 800-64), random.randint(0, 600-64)))
             reaction = GFont_smaller.render(f"Event: Spike planted!", False, (255,255,255))
         elif event == "rnggod":
             ups = random.randint(0, 200)
             toilettakechance += ups
-            reaction = GFont_smaller.render(f"Event: You made a deal with the RNG Gods!", False, (255,255,255))
+            reaction = GFont_smaller.render(f"Event: RNG Gods like you", False, (255,255,255))
         elif event == "rnggodfail":
             downs = random.randint(0, 200)
             toilettakechance -= downs
@@ -372,6 +386,17 @@ while runs:
             else:
                 reaction = GFont_smaller.render("Event: Turn that frown. Controls inverted.", False, (255,255,255))
                 controlsInverted = True
+        elif event == "nobackround":
+            if hasbackround:
+                hasbackround = False
+                reaction = GFont_smaller.render("Event: Eh who needs a backround?", False, (255,255,255))
+                print("Backround was disabled! Hit G to fix!")
+            else:
+                hasbackround = True
+                reaction = GFont_smaller.render("Event: yo we need that backround", False, (255,255,255))
+        elif event == "randombackround":
+            backroundcolor = random.choice(colorcodes)
+            reaction = GFont_smaller.render("Event: New color time!", False, (255,255,255))
         
     screen.blit(reaction, (400, 10))
     version = GFont_smaller.render(f"Build V0.1, RandomboiXD", False, (255,0,0))
