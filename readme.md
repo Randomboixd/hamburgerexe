@@ -13,17 +13,14 @@ Simple enoguh, yet if you're not a PrO GaEmR it might be hard.
 
 # Compiling
 
-On windows, make a virtual env and activate it,
-## Important: Dependencies
-- `pip install requests`
-- `pip install pygame`
-- `pip install pyinstaller`
-- `pip install pillow`
+On windows, make a virtual env and activate it.
 
+Then run compile.ps1
 
-in powershell you can run `compile.ps1` and make an executable... That should be it!
+On linux... i didn't test the game yet.
+However we got a build script for it.
 
-On linux... i didn't test the game yet. you caaan make a build however im not sure how it will end...
+Just make sure you're in a virtualenv and run compile.sh
 
 # Credits
 
