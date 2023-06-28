@@ -61,7 +61,7 @@ backroundcolor = random.choice(colorcodes)
 user = os.getlogin()
 
 
-PlayerIcon = pygame.image.load("Player.png")
+PlayerIcon = pygame.image.load("./HamburgerAssets/Player.png")
 PlayerX,PlayerY = 400, 300
 MovingConstantX = 0
 MovingConstantY = 0

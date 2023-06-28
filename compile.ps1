@@ -1,0 +1,1 @@
+pyinstaller --onefile game.py -i burgir.png
