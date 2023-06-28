@@ -1,7 +1,7 @@
 # 🍔.exe
 
 
-Hamburger.exe is a weird game i made in one and half days... (its also my first )
+Hamburger.exe is a weird game i made in one and half days... (its also my first)
 
 # How to play
 
@@ -9,7 +9,7 @@ Move with W A S D, or with arrow keys. Interact with E.
 
 Eat hamburgers, use the toilet to keep the meter below 10.
 
-Simple enoguh, yet if you're not a PrO GaEmR might be hard.
+Simple enoguh, yet if you're not a PrO GaEmR it might be hard.
 
 # Compiling
 
@@ -18,6 +18,7 @@ On windows, make a virtual env and activate it,
 - `pip install requests`
 - `pip install pygame`
 - `pip install pyinstaller`
+- `pip install pillow`
 
 
 in powershell you can run `compile.ps1` and make an executable... That should be it!
