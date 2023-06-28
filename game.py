@@ -35,7 +35,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 
 def DownloadFiles(): # This function downloads assets from https://rndwebsite.ddns.net/ You can replace the url with your own, just make sure you return bytes.
-    if os.path.exists("./HamburgerAssets/") and os.path.exists(f"./HamburgerAssets/burgir.png") and os.path.exists("./HamburgerAssets/cheeseburger.png") and os.path.exists("./HamburgerAssets/Player.png") and os.path.exists("./HamburgerAssets/spike.png") and os.path.exists("./HamburgerAssets/toilet.png"):
+    if os.path.exists("./HamburgerAssets/") and os.path.exists(f"./HamburgerAssets/burgir.png") and os.path.exists("./HamburgerAssets/cheeseburger.png") and os.path.exists("./HamburgerAssets/Player.png") and os.path.exists("./HamburgerAssets/spike.png") and os.path.exists("./HamburgerAssets/toilet.png") and os.path.exists("./HamburgerAssets/shop.png") and os.path.exists("./HamburgerAssets/coin.png"):
         print("Game assets are present, Starting game!")
     else:
         os.mkdir("./HamburgerAssets/")
@@ -45,6 +45,8 @@ def DownloadFiles(): # This function downloads assets from https://rndwebsite.dd
         Player = requests.get("https://rndwebsite.ddns.net/cdn/hamburgerexe/Player")
         Spike = requests.get("https://rndwebsite.ddns.net/cdn/hamburgerexe/spike")
         toilet = requests.get("https://rndwebsite.ddns.net/cdn/hamburgerexe/toilet")
+        Coin = requests.get("https://rndwebsite.ddns.net/cdn/hamburgerexe/coin")
+        Shop = requests.get("https://rndwebsite.ddns.net/cdn/hamburgerexe/shop")
 
         with open(f"./HamburgerAssets/burgir.png", "xb") as f:
             f.write(burgir.content)
@@ -61,6 +63,12 @@ def DownloadFiles(): # This function downloads assets from https://rndwebsite.dd
         with open(f"./HamburgerAssets/toilet.png", "xb") as f:
             f.write(toilet.content)
 
+        with open(f"./HamburgerAssets/coin.png", "xb") as f:
+            f.write(Coin.content)
+        
+        with open(f"./HamburgerAssets/shop.png", "xb") as f:
+            f.write(Shop.content)
+
         print("Finished downloading (and writing) files! Starting game!")
 
 DownloadFiles()
@@ -75,6 +83,8 @@ logo = pygame.image.load("./HamburgerAssets/burgir.png")
 toiletSprite = pygame.image.load("./HamburgerAssets/toilet.png")
 cheseburgerSprite = pygame.image.load("./HamburgerAssets/cheeseburger.png")
 PlayerIcon = pygame.image.load("./HamburgerAssets/Player.png")
+CoinSprite = pygame.image.load("./HamburgerAssets/coin.png")
+ShopSprite = pygame.image.load("./HamburgerAssets/shop.png")
 pygame.display.set_icon(logo)
 del logo
 
@@ -112,9 +122,13 @@ ToiletX,ToiletY = 500,300
 ToiletMovingConstantX = 0
 ToiletMovingConstantY = 0
 
+TakesDamageFromSpikes = True
+
 GameOver = False # Is game over?
 
 hasbackround = True
+
+Coins = 0
 
 
 reaction = GFont_smaller.render("Event: - nothing -", False, (255,255,255))
@@ -130,6 +144,7 @@ else:
 Saved = False # Used by gameover to prevent it from saving the game EVERY FRAME
 
 spikes = [] # Spike location tuples
+coinslocs = []
 
 def renderPlayer(xcoord,ycoord):
     player = screen.blit(PlayerIcon, (xcoord,ycoord))
@@ -142,6 +157,10 @@ def renderCheseburger(xcoord,ycoord):
 def renderToilet(xcoord,ycoord):
     toilet = screen.blit(toiletSprite, (xcoord,ycoord))
     return toilet
+
+def renderShop():
+    shop = screen.blit(ShopSprite, (0, 600-64))
+    return shop
 
 def tutorialscreen():
     if StartupFrames < 600:
@@ -189,10 +208,21 @@ def renderSpikes(): # Get spike locations and then render it
         s.append(screen.blit(spikeSprite, spike))
     return s
 
+def renderCoins():
+    c = []
+    locations = []
+    iteration = 0
+    for coin in coinslocs:
+        c.append(screen.blit(CoinSprite, coin))
+        locations.append(iteration)
+        iteration += 1
+    return [c, locations]
+
 runs = True
 while runs:
     if hasbackround == True:
         screen.fill(backroundcolor)
+    shop = renderShop()
     for events in pygame.event.get():
 
         if events.type == pygame.QUIT:
@@ -226,6 +256,18 @@ while runs:
                 else:
                     MovingConstantX -= moveSpeed
 
+            if events.key == pygame.K_x and Coins > 3:
+                Coins -= 3
+                moveSpeed -= 1
+
+            if events.key == pygame.K_c and Coins > 3:
+                Coins -= 3
+                moveSpeed += 1
+
+            if events.key == pygame.K_b and Coins > 20:
+                Coins -= 20
+                TakesDamageFromSpikes = False
+
         if events.type == pygame.KEYUP:
             if events.key == pygame.K_w or events.key == pygame.K_s or events.key == pygame.K_UP or events.key == pygame.K_DOWN:
                 MovingConstantY = 0
@@ -241,7 +283,7 @@ while runs:
 
             if events.key == pygame.K_LALT:
                 print("--- Start Variable Dump ---")
-                print(f"PlayerX/Y: {str((PlayerX, PlayerY))}\nToiletX/Y: {str((ToiletX,ToiletY))}\nGameSaved: {str(Saved)}\nStartupFrames: {str(StartupFrames)}\nSpikes: {str(spikes)}\nGameOver: {str(GameOver)}\ntoilettakechance: {str(toilettakechance)}\nCheseburgerLoc: {str(cheseburgerloc)}\nCheseburgerstouched: {str(cheseburgerstouched)}\nMovingConstantX/Y: {str((MovingConstantX, MovingConstantY))}\nToiletMovingConstantX/Y: {str((ToiletMovingConstantX,ToiletMovingConstantY))}\nMovespeed: {str(moveSpeed)}")
+                print(f"PlayerX/Y: {str((PlayerX, PlayerY))}\nToiletX/Y: {str((ToiletX,ToiletY))}\nGameSaved: {str(Saved)}\nStartupFrames: {str(StartupFrames)}\nSpikes: {str(spikes)}\nGameOver: {str(GameOver)}\ntoilettakechance: {str(toilettakechance)}\nCheseburgerLoc: {str(cheseburgerloc)}\nCheseburgerstouched: {str(cheseburgerstouched)}\nMovingConstantX/Y: {str((MovingConstantX, MovingConstantY))}\nToiletMovingConstantX/Y: {str((ToiletMovingConstantX,ToiletMovingConstantY))}\nMovespeed: {str(moveSpeed)}\nCoins: {str(Coins)}\nCoinslocs: {str(coinslocs)}")
                 print("--- End Variable Dump ---")
 
             if events.key == pygame.K_f:
@@ -289,14 +331,26 @@ while runs:
         player = renderPlayer(99999999,9999999)
 
     tutorialscreen()
+    CoinSign = GFont_smaller.render(f"You have {str(Coins)} coins!", False, (255,255,255))
+    screen.blit(CoinSign, (620, 580))
     spikelocs = renderSpikes()
     if spikelocs == []:
         pass
     else:
         for x in spikelocs:
-            if x.colliderect(player):
+            if x.colliderect(player) and TakesDamageFromSpikes == True:
                 GameOver = True
                 Saved = GameOverScreen(Saved)
+    
+    coinslocations = renderCoins()
+    if coinslocations == []:
+        pass
+    else:
+        for x,y in zip(coinslocations[0], coinslocations[1]):
+            if x.colliderect(player):
+                Coins += 1
+                del coinslocs[y]
+                del x
 
     ches = renderCheseburger(cheseburgerloc[0], cheseburgerloc[1])
 
@@ -343,7 +397,10 @@ while runs:
     screen.blit(stat, burgerstat)
     pygame.display.set_caption(f"Hamburger.exe - {str(cheseburgerstouched)} chesburgers eaten")
 
-    toiletstat = GFont_smaller.render(f"Your toilet meter: {str(toiletMeter)}/10", False, (255,255,255))
+    if toiletMeter > 8:
+        toiletstat = GFont_smaller.render(f"GO TO THE TOILET!", False, (255,255,255))
+    else:
+        toiletstat = GFont_smaller.render(f"Your toilet meter: {str(toiletMeter)}/10", False, (255,255,255))
     toiletwarning = GFont_smaller.render("Going over 10 is a game over!", False, (255,0,0))
     if GameOver != True:
         screen.blit(toiletstat, (300, 530))
@@ -359,7 +416,7 @@ while runs:
 
     if random.randint(0, 999) == 69:
 
-        event = random.choice(["spikes", "rnggod", "rnggodfail", "speedup", "speeddown", "invert", "nobackround", "randombackround"])
+        event = random.choice(["spikes", "rnggod", "rnggodfail", "speedup", "speeddown", "invert", "nobackround", "randombackround", "jackpot"])
         if event == "spikes":
             spikes.append((random.randint(0, 800-64), random.randint(0, 600-64)))
             reaction = GFont_smaller.render(f"Event: Spike planted!", False, (255,255,255))
@@ -384,7 +441,7 @@ while runs:
                 reaction = GFont_smaller.render("Event: No more weird controls!", False, (255,255,255))
                 controlsInverted = False
             else:
-                reaction = GFont_smaller.render("Event: Turn that frown. Controls inverted.", False, (255,255,255))
+                reaction = GFont_smaller.render("Event: You know what? *inverts your controls*", False, (255,255,255))
                 controlsInverted = True
         elif event == "nobackround":
             if hasbackround:
@@ -397,17 +454,31 @@ while runs:
         elif event == "randombackround":
             backroundcolor = random.choice(colorcodes)
             reaction = GFont_smaller.render("Event: New color time!", False, (255,255,255))
+        elif event == "jackpot":
+            howmuch = random.randint(1, 100)
+            for x in range(howmuch):
+                coinslocs.append((random.randint(100, 700), random.randint(100, 500)))
+            reaction = GFont_smaller.render("Event: WOOOOO Jackpot!", False, (255,255,255))
         
     screen.blit(reaction, (400, 10))
-    version = GFont_smaller.render(f"Build V0.1, RandomboiXD", False, (255,0,0))
+    version = GFont_smaller.render(f"Build V0.2, RandomboiXD", False, (255,0,0))
     records = GFont_smaller.render(f"High score: {str(record)}", False, (0,255,0))
     screen.blit(records, (1,20))
     screen.blit(version, (1,1))
+    if shop.colliderect(player):
+        HintDisplay = GFont_smaller.render("Welcome to the shop!", False, (255,255,255))
+        HintDisplay2 = GFont_smaller.render("X = -1 Speed,C = + 1 speed, 3 coins each!", False, (255,255,255))
+        HintDisplay3 = GFont_smaller.render("B = No damage from spikes (20 coins)", False, (255,255,255))
+        screen.blit(HintDisplay, (PlayerX, PlayerY-30))
+        screen.blit(HintDisplay2, (PlayerX, PlayerY-50))
+        screen.blit(HintDisplay3, (PlayerX, PlayerY-70))
     pygame.display.update()
     dice = random.randint(0, toilettakechance)
     if dice == 69: 
         toiletMeter += 1
 
+    if dice == 2:
+        coinslocs.append((random.randint(100, 700), random.randint(100, 500)))
     
 
 
