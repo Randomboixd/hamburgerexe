@@ -1,3 +1,16 @@
+"""
+License:
+
+Copyright © 2023 RandomboiXD
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"""
+
+
 import pygame
 import os
 import random
@@ -9,8 +22,19 @@ import requests
 pygame.init()
 os.system("cls")
 
+licensetext = """
+Copyright © 2023 RandomboiXD
 
-def DownloadFiles():
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+"""
+
+
+def DownloadFiles(): # This function downloads assets from https://rndwebsite.ddns.net/ You can replace the url with your own, just make sure you return bytes.
     if os.path.exists("./HamburgerAssets/") and os.path.exists(f"./HamburgerAssets/burgir.png") and os.path.exists("./HamburgerAssets/cheeseburger.png") and os.path.exists("./HamburgerAssets/Player.png") and os.path.exists("./HamburgerAssets/spike.png") and os.path.exists("./HamburgerAssets/toilet.png"):
         print("Game assets are present, Starting game!")
     else:
@@ -40,63 +64,69 @@ def DownloadFiles():
         print("Finished downloading (and writing) files! Starting game!")
 
 DownloadFiles()
+print(licensetext) # Print the MIT License
 
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((800, 600)) # Set the display to 800,600
+# Import assets/sprites/whatever
+
 pygame.display.set_caption("./HamburgerAssets/Hamburger.exe")
 spikeSprite = pygame.image.load("./HamburgerAssets/spike.png")
 logo = pygame.image.load("./HamburgerAssets/burgir.png")
 toiletSprite = pygame.image.load("./HamburgerAssets/toilet.png")
 cheseburgerSprite = pygame.image.load("./HamburgerAssets/cheeseburger.png")
+PlayerIcon = pygame.image.load("./HamburgerAssets/Player.png")
 pygame.display.set_icon(logo)
 del logo
+
+# Add Fonts
 GFont = pygame.font.SysFont("Cascadia Code SemiBold", 40)
 GFont_smaller = pygame.font.SysFont("Cascadia Code", 30)
 GFont_large = pygame.font.SysFont("Cascadia Mono SemiBold", 60)
 fontcenter = (200 , 20)
 fontbottom = (250, 500)
 burgerstat = (1, 40)
+
+# Add a random backround color every time the game starts up
 colorcodes = [(102,17,0), (128,64,0), (102,102,0), (85,128,0), (42,128,0), (0,128,64), (0,128,128), (0,85,128), (42,0,128), (85,0,128), (128,0,106)]
 backroundcolor = random.choice(colorcodes)
 
-user = os.getlogin()
+user = os.getlogin() # Get user for tutorial
 
-
-PlayerIcon = pygame.image.load("./HamburgerAssets/Player.png")
 PlayerX,PlayerY = 400, 300
 MovingConstantX = 0
 MovingConstantY = 0
 controlsInverted = False
 
-cheseburgerloc = (random.randint(200, 800), random.randint(100, 600))
-cheseburgerstouched = 0
+cheseburgerloc = (random.randint(200, 800), random.randint(100, 600)) # Generates a random tuple location for the cheeseburger. misspell is intentional
+cheseburgerstouched = 0 # How many cheeseburgers were clicked?
 
-toiletSpeed = 0.3
-toiletMeter = 0
+toiletSpeed = 0.3 # Speed of toilet. Events change this
+toiletMeter = 0 # If this reaches 11 = Game over
 
-moveSpeed = 1
+moveSpeed = 1 # The Player's movespeed, events change this
 
-StartupFrames = 0
+StartupFrames = 0 # +1 every frame. Used by tutorial
 
-toilettakechance = 960
+toilettakechance = 960 # The chance for toiletMeter to go up by one
 ToiletX,ToiletY = 500,300
 ToiletMovingConstantX = 0
 ToiletMovingConstantY = 0
 
-GameOver = False
+GameOver = False # Is game over?
 
 reaction = GFont_smaller.render("Event: - nothing -", False, (255,255,255))
 
-if os.path.exists("hamburger.records"):
+if os.path.exists("hamburger.records"): # If possible, load the records
     with open("hamburger.records", "r") as f:
         f = json.load(f)
-    record = int(base64.b64decode(f["highscore"].encode()).decode())
+    record = int(base64.b64decode(f["highscore"].encode()).decode()) # Records are encoded in B64
     del f
 else:
     record = 0
 
-Saved = False
+Saved = False # Used by gameover to prevent it from saving the game EVERY FRAME
 
-spikes = []
+spikes = [] # Spike location tuples
 
 def renderPlayer(xcoord,ycoord):
     player = screen.blit(PlayerIcon, (xcoord,ycoord))
@@ -126,7 +156,7 @@ def tutorialscreen():
 
 def GameOverScreen(Saved):
     
-    if Saved != True:
+    if Saved != True: # Not saved? then save it!
         if os.path.exists("./hamburger.records"):
             
             with open("hamburger.records", "r") as f:
@@ -150,7 +180,7 @@ def GameOverScreen(Saved):
 
 
 
-def renderSpikes():
+def renderSpikes(): # Get spike locations and then render it
     s = []
     for spike in spikes:
         s.append(screen.blit(spikeSprite, spike))
@@ -220,6 +250,7 @@ while runs:
         if events.type == pygame.KEYDOWN and events.key == pygame.K_e and ches.colliderect(player) and GameOver != True:
             cheseburgerloc = (random.randint(200, 500), random.randint(100, 500))
             cheseburgerstouched += 1
+
         if events.type == pygame.KEYDOWN and events.key == pygame.K_e and toilet.colliderect(player) and toiletMeter > 8 and GameOver != True:
             toiletMeter = 0
 
@@ -227,7 +258,7 @@ while runs:
     PlayerY += MovingConstantY
     PlayerX += MovingConstantX
     
-    if GameOver != True:
+    if GameOver != True: # This code allows the game to check if player is out of bounds. Thanks ChatGPT for helping me in math... my brain is no longer braining
         if PlayerY > 600 - 64:
             PlayerY = 600 - 64
         elif PlayerY < 0:
@@ -238,10 +269,11 @@ while runs:
         elif PlayerX < 0:
             PlayerX = 0
 
-    if GameOver != True:
+    if GameOver != True: # Yeet the player off screen if game over
         player = renderPlayer(PlayerX,PlayerY)
     else:
         player = renderPlayer(99999999,9999999)
+
     tutorialscreen()
     spikelocs = renderSpikes()
     if spikelocs == []:
@@ -256,6 +288,7 @@ while runs:
 
     toiletmovetype = random.choice(["onward", "left", "right", "backward","onward", "left", "right", "backward","onward", "left", "right", "backward","onward", "left", "right", "backward"])
     movelength = [0, 0.5, 0.6, 0.7]
+    # Making the toilet move randomly
     if toiletmovetype == "onward":
         howmuch = random.choice(movelength)
         ToiletMovingConstantY += howmuch
@@ -347,7 +380,7 @@ while runs:
     screen.blit(version, (1,1))
     pygame.display.update()
     dice = random.randint(0, toilettakechance)
-    if dice == 69:
+    if dice == 69: 
         toiletMeter += 1
 
     
