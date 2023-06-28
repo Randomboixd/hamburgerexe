@@ -3,6 +3,8 @@
 
 Hamburger.exe is a weird game i made in one and half days... (its also my first)
 
+Game code is found in game.py... Its not the best but yeah. it works.
+
 # How to play
 
 Move with W A S D, or with arrow keys. Interact with E.
