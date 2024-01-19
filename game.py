@@ -1,7 +1,7 @@
 """
 License:
 
-Copyright © 2023 RandomboiXD
+Copyright © 2024 RandomboiXD
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -24,7 +24,7 @@ pygame.init()
 os.system("cls")
 
 licensetext = """
-Copyright © 2023 RandomboiXD
+Copyright © 2024 RandomboiXD
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -39,48 +39,8 @@ def DownloadFiles(): # This function downloads assets from https://rndwebsite.dd
     if os.path.exists("./HamburgerAssets/") and os.path.exists(f"./HamburgerAssets/burgir.png") and os.path.exists("./HamburgerAssets/cheeseburger.png") and os.path.exists("./HamburgerAssets/Player.png") and os.path.exists("./HamburgerAssets/spike.png") and os.path.exists("./HamburgerAssets/toilet.png") and os.path.exists("./HamburgerAssets/shop.png") and os.path.exists("./HamburgerAssets/coin.png") and os.path.exists("./HamburgerAssets/gear.png") and os.path.exists("./HamburgerAssets/backarrow.png"):
         print("Game assets are present, Starting game!")
     else:
-        os.mkdir("./HamburgerAssets/")
-        print("Connecting to https://rndwebsite.randomboixd.repl.co/ and downloading assets!")
-        burgir = requests.get("https://rndwebsite.randomboixd.repl.co/cdn/hamburgerexe/burgir")
-        cheeseburger = requests.get("https://rndwebsite.randomboixd.repl.co/cdn/hamburgerexe/cheeseburger")
-        time.sleep(2)
-        Player = requests.get("https://rndwebsite.randomboixd.repl.co/cdn/hamburgerexe/Player")
-        Spike = requests.get("https://rndwebsite.randomboixd.repl.co/cdn/hamburgerexe/spike")
-        toilet = requests.get("https://rndwebsite.randomboixd.repl.co/cdn/hamburgerexe/toilet")
-        Coin = requests.get("https://rndwebsite.randomboixd.repl.co/cdn/hamburgerexe/coin")
-        time.sleep(2)
-        Shop = requests.get("https://rndwebsite.randomboixd.repl.co/cdn/hamburgerexe/shop")
-        gear = requests.get("https://rndwebsite.randomboixd.repl.co/cdn/hamburgerexe/gear")
-        backarrow = requests.get("https://rndwebsite.randomboixd.repl.co/cdn/hamburgerexe/backarrow")
-
-        with open(f"./HamburgerAssets/burgir.png", "xb") as f:
-            f.write(burgir.content)
-
-        with open(f"./HamburgerAssets/cheeseburger.png", "xb") as f:
-            f.write(cheeseburger.content)
-
-        with open(f"./HamburgerAssets/Player.png", "xb") as f:
-            f.write(Player.content)
-        
-        with open(f"./HamburgerAssets/spike.png", "xb") as f:
-            f.write(Spike.content)
-        
-        with open(f"./HamburgerAssets/toilet.png", "xb") as f:
-            f.write(toilet.content)
-
-        with open(f"./HamburgerAssets/coin.png", "xb") as f:
-            f.write(Coin.content)
-        
-        with open(f"./HamburgerAssets/shop.png", "xb") as f:
-            f.write(Shop.content)
-        
-        with open(f"./HamburgerAssets/gear.png", "xb") as f:
-            f.write(gear.content)
-
-        with open(f"./HamburgerAssets/backarrow.png", "xb") as f:
-            f.write(backarrow.content)
-
-        print("Finished downloading (and writing) files! Starting game!")
+        print("FATAL: Hamburger.exe assets not found in ./HamburgerAssets/ !\nPlease manually download the .png files from https://github.com/RandomboiXD/hamburgerexe and put them into a new folder called HamburgerAssets!")
+        quit(1)
 
 DownloadFiles()
 print(licensetext) # Print the MIT License
